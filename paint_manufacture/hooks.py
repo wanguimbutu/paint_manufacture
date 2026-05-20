@@ -9,6 +9,7 @@ app_license = "mit"
 # All non-paint Work Orders are fully unaffected (the override calls super()).
 override_doctype_class = {
 	"Work Order": "paint_manufacture.paint_manufacture.overrides.work_order.CustomWorkOrder",
+	"Stock Entry": "paint_manufacture.paint_manufacture.overrides.stock_entry.CustomStockEntry",
 }
 
 # Inject the paint production JS into every Work Order form

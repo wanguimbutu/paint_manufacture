@@ -43,6 +43,18 @@ class CustomWorkOrder(WorkOrder):
 			self._pm_auto_skip_transfer()
 			self._pm_calculate_base_used()
 			self._pm_calculate_remaining()
+		self._pm_normalise_item_amounts()
+
+	def _pm_normalise_item_amounts(self):
+		"""Round amount fields in required_items to 9 decimal places.
+
+		super().validate() recomputes rate × qty using Python floats, which can
+		produce values like 45.00299999999999 vs the stored 45.003.  Frappe's
+		after-submit guard does a string comparison and throws on that noise.
+		"""
+		for item in (self.required_items or []):
+			if getattr(item, "amount", None) is not None:
+				item.amount = flt(item.amount, 9)
 
 	def on_submit(self):
 		super().on_submit()
@@ -165,14 +177,11 @@ class CustomWorkOrder(WorkOrder):
 		se = frappe.new_doc("Stock Entry")
 		se.stock_entry_type = "Manufacture"
 		se.purpose = "Manufacture"
-		# Intentionally NOT linking se.work_order — ERPNext validates that every
-		# finished item matches the WO's single production_item, but paint orders
-		# pack multiple different SKUs.  Status & produced_qty are updated via
-		# update_status() below.  Traceability is kept through pm_paint_stock_entry.
+		# Signal our CustomStockEntry override to allow multiple finished SKUs.
+		se.flags.pm_paint_entry = True
 		se.company = self.company
 		se.posting_date = nowdate()
 		se.bom_no = self.bom_no
-		se.fg_completed_qty = flt(_g(self, "pm_produced_base_qty", 0)) or flt(self.qty)
 
 		src_wh = self.source_warehouse
 		wip_wh = self.wip_warehouse
