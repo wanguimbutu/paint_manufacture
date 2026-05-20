@@ -144,6 +144,15 @@ class CustomWorkOrder(WorkOrder):
 	# Internal helpers
 	# ------------------------------------------------------------------
 
+	def check_wip_warehouse_skip(self):
+		"""
+		ERPNext clears wip_warehouse whenever skip_transfer=1 and from_wip_warehouse=0.
+		Paint orders need the WIP warehouse (Stage 1 puts base there, Stage 2 takes it).
+		"""
+		if _g(self, "pm_is_paint_order", 0):
+			return
+		super().check_wip_warehouse_skip()
+
 	def _pm_auto_skip_transfer(self):
 		"""Paint orders use staged stock entries — no separate WIP transfer step."""
 		if not self.skip_transfer:
