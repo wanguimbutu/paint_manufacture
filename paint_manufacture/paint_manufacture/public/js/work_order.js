@@ -63,7 +63,10 @@ frappe.ui.form.on("Work Order", {
 			() => {
 				frappe.call({
 					method: PM_MODULE + ".pm_load_quality_template",
-					args: { work_order: frm.doc.name },
+					args: {
+						work_order: frm.doc.name,
+						template: frm.doc.pm_quality_inspection_template,
+					},
 					callback() { frm.reload_doc(); },
 				});
 			}

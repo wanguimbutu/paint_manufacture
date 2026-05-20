@@ -98,9 +98,9 @@ class CustomWorkOrder(WorkOrder):
 		return se_name
 
 	@frappe.whitelist()
-	def pm_load_quality_template(self):
+	def pm_load_quality_template(self, template=None):
 		"""Populate pm_quality_readings from the selected Quality Inspection Template."""
-		tmpl = _g(self, "pm_quality_inspection_template")
+		tmpl = template or _g(self, "pm_quality_inspection_template")
 		if not tmpl:
 			frappe.throw(_("Please select a Quality Inspection Template first."))
 		template = frappe.get_doc("Quality Inspection Template", tmpl)
@@ -361,6 +361,6 @@ def pm_complete_production(work_order):
 
 
 @frappe.whitelist()
-def pm_load_quality_template(work_order):
+def pm_load_quality_template(work_order, template=None):
 	doc = frappe.get_doc("Work Order", work_order)
-	doc.pm_load_quality_template()
+	doc.pm_load_quality_template(template=template)
