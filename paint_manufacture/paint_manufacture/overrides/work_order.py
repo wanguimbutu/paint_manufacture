@@ -178,6 +178,16 @@ class CustomWorkOrder(WorkOrder):
 			)
 		if not flt(_g(self, "pm_produced_base_qty", 0)):
 			frappe.throw(_("Please enter the Produced Base Qty before completing base production."))
+		if not self.wip_warehouse:
+			frappe.throw(
+				_("Please set the Work-in-Progress Warehouse on the Work Order — the base paint is received there after Stage 1.")
+			)
+		if not self.source_warehouse and any(
+			not _g(item, "source_warehouse") for item in (self.required_items or [])
+		):
+			frappe.throw(
+				_("Please set the Source Warehouse on the Work Order (or on each required item) so raw materials can be consumed.")
+			)
 		existing = _g(self, "pm_base_stock_entry")
 		if existing:
 			frappe.throw(
@@ -194,6 +204,10 @@ class CustomWorkOrder(WorkOrder):
 		if not _g(self, "pm_base_stock_entry"):
 			frappe.throw(
 				_("Please complete base production first before completing paint production.")
+			)
+		if not self.wip_warehouse:
+			frappe.throw(
+				_("Please set the Work-in-Progress Warehouse on the Work Order — the base paint is consumed from there in Stage 2.")
 			)
 		if not (_g(self, "pm_packaging_items") or []):
 			frappe.throw(_("Please add at least one row in Packaging Items before completing."))
