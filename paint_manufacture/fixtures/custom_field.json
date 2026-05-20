@@ -180,6 +180,19 @@
   "depends_on": "eval:doc.pm_is_paint_order"
  },
  {
+  "name": "Work Order-pm_base_stock_entry",
+  "doctype": "Custom Field",
+  "dt": "Work Order",
+  "fieldname": "pm_base_stock_entry",
+  "fieldtype": "Link",
+  "insert_after": "pm_base_batch_no",
+  "label": "Base Stock Entry",
+  "options": "Stock Entry",
+  "read_only": 1,
+  "description": "Stage 1 stock entry: raw materials consumed, base paint received into WIP",
+  "depends_on": "eval:doc.pm_is_paint_order"
+ },
+ {
   "name": "Work Order-pm_paint_stock_entry",
   "doctype": "Custom Field",
   "dt": "Work Order",
@@ -189,7 +202,7 @@
   "label": "Paint Stock Entry",
   "options": "Stock Entry",
   "read_only": 1,
-  "description": "Combined single stock entry created on completion",
+  "description": "Stage 2 stock entry: base consumed, finished SKUs received into FG",
   "depends_on": "eval:doc.pm_is_paint_order"
  },
  {

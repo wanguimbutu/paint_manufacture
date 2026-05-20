@@ -1,9 +1,9 @@
 /**
  * Paint Manufacture – Work Order extensions
  *
- * All paint-specific actions are called via their full Python module path so
- * that Frappe's whitelist resolver can find them in our override module
- * instead of looking in the original erpnext Work Order module.
+ * Two-stage paint production flow:
+ *   Stage 1 — Complete Base Production  (BOM materials → base into WIP)
+ *   Stage 2 — Complete Paint Production (base from WIP + packaging → finished SKUs)
  */
 
 const PM_MODULE = "paint_manufacture.paint_manufacture.overrides.work_order";
@@ -38,7 +38,6 @@ frappe.ui.form.on("Work Order", {
 	},
 
 	pm_sync_base_batch(frm) {
-		// Auto-fill pm_base_batch_no from the batch ERPNext created on WO submit
 		if (frm.doc.pm_base_batch_no || frm.doc.docstatus !== 1) return;
 		frappe.db.get_value(
 			"Batch",
@@ -85,52 +84,84 @@ frappe.ui.form.on("Work Order", {
 		if (!frm.doc.pm_is_paint_order) return;
 		if (frm.doc.docstatus !== 1) return;
 
-		// Remove native ERPNext manufacture buttons — paint orders use their own
-		// single-stock-entry flow via "Complete Paint Production".
+		// Remove native ERPNext manufacture buttons — paint orders have their own flow.
 		frm.remove_custom_button(__("Finish"));
 		frm.remove_custom_button(__("Material Consumption"));
 		frm.remove_custom_button(__("Start"));
 		frm.remove_custom_button(__("Create Pick List"));
 
 		const status = frm.doc.status;
+		const baseComplete = !!frm.doc.pm_base_stock_entry;
+		const paintComplete = !!frm.doc.pm_paint_stock_entry;
 
+		// ── Not Started ────────────────────────────────────────────────
 		if (status === "Not Started") {
 			frm.dashboard.add_comment(
-				__("Fill in Additional Materials, Packaging, and Quality details, then click Start Production when ready."),
-				"blue",
-				true
+				__("Submit the Work Order, then click Start Production to begin the paint production process."),
+				"blue", true
 			);
-
 			frm.add_custom_button(__("Start Production"), () => {
 				frappe.call({
 					method: PM_MODULE + ".pm_start_production",
 					args: { work_order: frm.doc.name },
 					freeze: true,
 					freeze_message: __("Starting production…"),
-					callback(r) {
-						if (!r.exc) {
-							frm.reload_doc();
-						}
-					},
+					callback(r) { if (!r.exc) frm.reload_doc(); },
 				});
 			}, __("Paint Actions")).addClass("btn-primary");
 		}
 
-		if (status === "In Process") {
-			frm.add_custom_button(__("Complete Paint Production"), () => {
+		// ── In Process: Stage 1 pending ────────────────────────────────
+		if (status === "In Process" && !baseComplete) {
+			frm.dashboard.add_comment(
+				__("Enter the Produced Base Qty, then click Complete Base Production. The base will be received into the WIP warehouse before packaging begins."),
+				"blue", true
+			);
+			frm.add_custom_button(__("Complete Base Production"), () => {
 				frappe.confirm(
-					__("Create a single Stock Entry for all materials and finished goods?"),
+					__("Create a Manufacture Stock Entry for the base paint batch? Raw materials will be consumed and the base will be received into the WIP warehouse."),
 					() => {
 						frappe.call({
-							method: PM_MODULE + ".pm_complete_production",
+							method: PM_MODULE + ".pm_complete_base_production",
 							args: { work_order: frm.doc.name },
 							freeze: true,
-							freeze_message: __("Creating Stock Entry…"),
+							freeze_message: __("Creating Base Stock Entry…"),
 							callback(r) { if (!r.exc) frm.reload_doc(); },
 						});
 					}
 				);
 			}, __("Paint Actions")).addClass("btn-primary");
+		}
+
+		// ── In Process: Stage 2 pending ────────────────────────────────
+		if (status === "In Process" && baseComplete && !paintComplete) {
+			frm.dashboard.add_comment(
+				__("Base production complete. Fill in Additional Materials and Packaging Items, then click Complete Paint Production."),
+				"green", true
+			);
+			frm.add_custom_button(__("Complete Paint Production"), () => {
+				frappe.confirm(
+					__("Create a Manufacture Stock Entry for all packaging materials and finished goods?"),
+					() => {
+						frappe.call({
+							method: PM_MODULE + ".pm_complete_production",
+							args: { work_order: frm.doc.name },
+							freeze: true,
+							freeze_message: __("Creating Paint Stock Entry…"),
+							callback(r) { if (!r.exc) frm.reload_doc(); },
+						});
+					}
+				);
+			}, __("Paint Actions")).addClass("btn-primary");
+		}
+
+		// ── View shortcuts ─────────────────────────────────────────────
+		if (frm.doc.pm_base_stock_entry) {
+			frm.add_custom_button(
+				__("View Base Stock Entry"),
+				() => frappe.set_route("Form", "Stock Entry", frm.doc.pm_base_stock_entry),
+				__("Paint Actions")
+			);
 		}
 
 		if (frm.doc.pm_quality_inspection) {
@@ -143,7 +174,7 @@ frappe.ui.form.on("Work Order", {
 
 		if (frm.doc.pm_paint_stock_entry) {
 			frm.add_custom_button(
-				__("View Stock Entry"),
+				__("View Paint Stock Entry"),
 				() => frappe.set_route("Form", "Stock Entry", frm.doc.pm_paint_stock_entry),
 				__("Paint Actions")
 			);

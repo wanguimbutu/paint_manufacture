@@ -33,6 +33,7 @@ fixtures = [
 				"pm_sec_packaging", "pm_packaging_items",
 				"pm_tab_quality", "pm_quality_inspection_template",
 				"pm_quality_readings", "pm_quality_inspection",
+				"pm_base_stock_entry",
 				"pm_paint_stock_entry",
 				"custom_work_order_batch",
 				"paint_production_order",
