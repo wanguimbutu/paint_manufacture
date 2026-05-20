@@ -139,6 +139,21 @@ frappe.ui.form.on("Work Order", {
 				__("Base production complete. Fill in Additional Materials and Packaging Items, then click Complete Paint Production."),
 				"green", true
 			);
+
+			// Frappe keeps submitted-doc fields locked after a reload_doc().
+			// Explicitly mark the Stage-2 input fields as editable so the user
+			// can fill them in without needing to click "Edit" on the form.
+			[
+				"pm_produced_base_qty", "pm_base_batch_no",
+				"pm_additional_materials", "pm_packaging_items",
+				"pm_quality_inspection_template", "pm_quality_readings",
+			].forEach(f => frm.set_df_property(f, "read_only", 0));
+			frm.refresh_fields([
+				"pm_produced_base_qty", "pm_base_batch_no",
+				"pm_additional_materials", "pm_packaging_items",
+				"pm_quality_inspection_template", "pm_quality_readings",
+			]);
+
 			frm.add_custom_button(__("Complete Paint Production"), () => {
 				frappe.confirm(
 					__("Create a Manufacture Stock Entry for all packaging materials and finished goods?"),

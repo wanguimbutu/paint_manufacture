@@ -83,6 +83,19 @@ class CustomWorkOrder(WorkOrder):
 		se_name = self._pm_make_base_stock_entry()
 		self.db_set("pm_base_stock_entry", se_name)
 
+		# Push produced_qty so manufacturing reports reflect the base produced.
+		# We use db_set to avoid triggering update_status (WO must stay In Process).
+		produced = flt(_g(self, "pm_produced_base_qty", 0)) or flt(self.qty)
+		self.db_set("produced_qty", produced)
+
+		# Stamp transferred_qty on every BOM item row so the WO Item grid and
+		# production reports show the correct consumed quantities.
+		for item in (self.required_items or []):
+			frappe.db.set_value(
+				"Work Order Item", item.name,
+				"transferred_qty", flt(item.required_qty),
+			)
+
 		frappe.msgprint(
 			_("Base production complete. Stock Entry {0} created. You may now fill in Packaging Items and complete paint production.").format(
 				frappe.utils.get_link_to_form("Stock Entry", se_name)
