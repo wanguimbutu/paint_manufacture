@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "creation": "2026-05-17 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter",
+  "parameter_name",
+  "col_break_1",
+  "min_value",
+  "max_value",
+  "col_break_2",
+  "reading_value",
+  "status",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "options": "Quality Inspection Parameter",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "parameter.parameter_name",
+   "fieldname": "parameter_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "min_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Min Value"
+  },
+  {
+   "fieldname": "max_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Max Value"
+  },
+  {
+   "fieldname": "col_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "reading_value",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reading Value"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nAccepted\nRejected"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-05-17 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Paint Manufacture",
+ "name": "PM Quality Reading",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

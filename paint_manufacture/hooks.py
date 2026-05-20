@@ -5,6 +5,41 @@ app_description = "Paint Manufacture customisation"
 app_email = "hello@soriasystems.co.ke"
 app_license = "mit"
 
+# Override the standard Work Order controller with the paint-aware version.
+# All non-paint Work Orders are fully unaffected (the override calls super()).
+override_doctype_class = {
+	"Work Order": "paint_manufacture.paint_manufacture.overrides.work_order.CustomWorkOrder",
+}
+
+# Inject the paint production JS into every Work Order form
+doctype_js = {
+	"Work Order": "paint_manufacture/public/js/work_order.js",
+	"Paint Production Order": "paint_manufacture/paint_manufacture/doctype/paint_production_order/paint_production_order.js",
+}
+
+# Fixtures — custom fields shipped with the app.
+# Filters are used by `bench export-fixtures`; import always reads custom_field.json.
+fixtures = [
+	{
+		"dt": "Custom Field",
+		"filters": [
+			["dt", "in", ["Work Order", "Stock Entry"]],
+			["fieldname", "in", [
+				"pm_tab", "pm_is_paint_order",
+				"pm_sec_base_result", "pm_produced_base_qty", "pm_base_batch_no",
+				"pm_col_base", "pm_total_base_used", "pm_remaining_base_qty",
+				"pm_sec_additional", "pm_additional_materials",
+				"pm_sec_packaging", "pm_packaging_items",
+				"pm_tab_quality", "pm_quality_inspection_template",
+				"pm_quality_readings", "pm_quality_inspection",
+				"pm_paint_stock_entry",
+				"custom_work_order_batch",
+				"paint_production_order",
+			]],
+		],
+	},
+]
+
 # Apps
 # ------------------
 

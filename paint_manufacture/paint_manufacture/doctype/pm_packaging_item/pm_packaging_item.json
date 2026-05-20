@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "creation": "2026-05-17 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "finished_item",
+  "finished_item_name",
+  "col_break_1",
+  "container_size_litres",
+  "packed_qty",
+  "uom",
+  "col_break_2",
+  "base_qty_used",
+  "target_warehouse",
+  "batch_no",
+  "sec_packaging",
+  "packaging_material",
+  "packaging_material_name",
+  "packaging_qty",
+  "packaging_uom"
+ ],
+ "fields": [
+  {
+   "fieldname": "finished_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Finished Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "finished_item.item_name",
+   "fieldname": "finished_item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Litres of base consumed per container unit",
+   "fieldname": "container_size_litres",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Container Size (L)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "packed_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Units Packed",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "finished_item.stock_uom",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "container_size_litres × units_packed",
+   "fieldname": "base_qty_used",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Base Used (L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "label": "Target Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Link",
+   "label": "Batch No",
+   "options": "Batch"
+  },
+  {
+   "fieldname": "sec_packaging",
+   "fieldtype": "Section Break",
+   "label": "Packaging Material"
+  },
+  {
+   "fieldname": "packaging_material",
+   "fieldtype": "Link",
+   "in_list_view": 0,
+   "label": "Packaging Item",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "packaging_material.item_name",
+   "fieldname": "packaging_material_name",
+   "fieldtype": "Data",
+   "label": "Packaging Item Name",
+   "read_only": 1
+  },
+  {
+   "description": "Defaults to units_packed if blank",
+   "fieldname": "packaging_qty",
+   "fieldtype": "Float",
+   "label": "Packaging Qty"
+  },
+  {
+   "fetch_from": "packaging_material.stock_uom",
+   "fieldname": "packaging_uom",
+   "fieldtype": "Link",
+   "label": "Packaging UOM",
+   "options": "UOM",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-05-17 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Paint Manufacture",
+ "name": "PM Packaging Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,347 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-05-17 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "status",
+  "production_date",
+  "company",
+  "col_break_header",
+  "base_bom",
+  "base_item",
+  "base_item_name",
+  "planned_base_qty",
+  "base_uom",
+  "sec_warehouses",
+  "source_warehouse",
+  "wip_warehouse",
+  "col_break_wh",
+  "fg_warehouse",
+  "work_order",
+  "amended_from",
+  "tab_base_production",
+  "sec_raw_materials",
+  "base_raw_materials",
+  "sec_additional",
+  "additional_materials",
+  "tab_base_result",
+  "produced_base_qty",
+  "remaining_base_qty",
+  "base_batch_no",
+  "tab_packaging",
+  "sec_packaging_intro",
+  "packaging_items",
+  "total_base_used",
+  "tab_quality",
+  "quality_inspection_template",
+  "quality_readings",
+  "quality_inspection",
+  "tab_completion",
+  "stock_entry",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "PPO-.YYYY.-",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nIn Progress\nBase Produced\nPackaging\nCompleted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "production_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Production Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_header",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "base_bom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Base BOM",
+   "options": "BOM",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "base_bom.item",
+   "fieldname": "base_item",
+   "fieldtype": "Link",
+   "label": "Base Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "base_bom.item_name",
+   "fieldname": "base_item_name",
+   "fieldtype": "Data",
+   "label": "Base Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_base_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Planned Base Qty",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "base_bom.uom",
+   "fieldname": "base_uom",
+   "fieldtype": "Link",
+   "label": "Base UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sec_warehouses",
+   "fieldtype": "Section Break",
+   "label": "Warehouses"
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Raw Material Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "wip_warehouse",
+   "fieldtype": "Link",
+   "label": "WIP / Base Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "col_break_wh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fg_warehouse",
+   "fieldtype": "Link",
+   "label": "Finished Goods Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "work_order",
+   "fieldtype": "Link",
+   "label": "Linked Work Order",
+   "options": "Work Order",
+   "read_only": 1,
+   "description": "Standard Work Order created from this planning worksheet"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Paint Production Order",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "tab_base_production",
+   "fieldtype": "Tab Break",
+   "label": "Base Production"
+  },
+  {
+   "fieldname": "sec_raw_materials",
+   "fieldtype": "Section Break",
+   "label": "Raw Materials (from BOM)"
+  },
+  {
+   "fieldname": "base_raw_materials",
+   "fieldtype": "Table",
+   "label": "Base Raw Materials",
+   "options": "PM Base Material"
+  },
+  {
+   "fieldname": "sec_additional",
+   "fieldtype": "Section Break",
+   "label": "Additional Materials"
+  },
+  {
+   "fieldname": "additional_materials",
+   "fieldtype": "Table",
+   "label": "Additional Materials",
+   "options": "PM Additional Material"
+  },
+  {
+   "fieldname": "tab_base_result",
+   "fieldtype": "Tab Break",
+   "label": "Base Result"
+  },
+  {
+   "bold": 1,
+   "fieldname": "produced_base_qty",
+   "fieldtype": "Float",
+   "label": "Produced Base Qty"
+  },
+  {
+   "description": "Produced Base Qty minus all base used in packaging",
+   "fieldname": "remaining_base_qty",
+   "fieldtype": "Float",
+   "label": "Remaining Base Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "base_batch_no",
+   "fieldtype": "Link",
+   "label": "Base Batch No",
+   "options": "Batch"
+  },
+  {
+   "fieldname": "tab_packaging",
+   "fieldtype": "Tab Break",
+   "label": "Packaging"
+  },
+  {
+   "fieldname": "sec_packaging_intro",
+   "fieldtype": "Section Break",
+   "label": "Packaged Finished Goods"
+  },
+  {
+   "fieldname": "packaging_items",
+   "fieldtype": "Table",
+   "label": "Packaging Items",
+   "options": "PM Packaging Item"
+  },
+  {
+   "fieldname": "total_base_used",
+   "fieldtype": "Float",
+   "label": "Total Base Used (L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tab_quality",
+   "fieldtype": "Tab Break",
+   "label": "Quality"
+  },
+  {
+   "fieldname": "quality_inspection_template",
+   "fieldtype": "Link",
+   "label": "Quality Inspection Template",
+   "options": "Quality Inspection Template"
+  },
+  {
+   "fieldname": "quality_readings",
+   "fieldtype": "Table",
+   "label": "Quality Readings",
+   "options": "PM Quality Reading"
+  },
+  {
+   "fieldname": "quality_inspection",
+   "fieldtype": "Link",
+   "label": "Quality Inspection",
+   "options": "Quality Inspection",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tab_completion",
+   "fieldtype": "Tab Break",
+   "label": "Completion"
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Stock Entry",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-05-17 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Paint Manufacture",
+ "name": "Paint Production Order",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Gray",
+   "title": "Draft"
+  },
+  {
+   "color": "Blue",
+   "title": "In Progress"
+  },
+  {
+   "color": "Yellow",
+   "title": "Base Produced"
+  },
+  {
+   "color": "Orange",
+   "title": "Packaging"
+  },
+  {
+   "color": "Green",
+   "title": "Completed"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  }
+ ],
+ "title_field": "base_item_name",
+ "track_changes": 1
+}
