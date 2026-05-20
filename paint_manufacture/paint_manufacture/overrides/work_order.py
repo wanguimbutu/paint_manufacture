@@ -240,7 +240,9 @@ class CustomWorkOrder(WorkOrder):
 				},
 			)
 
-		# Base paint received into WIP warehouse
+		# Base paint received into WIP warehouse.
+		# bom_no on this row makes validate_for_manufacture=True so ERPNext
+		# correctly applies Manufacture-specific warehouse rules for all rows.
 		base_qty = flt(_g(self, "pm_produced_base_qty", 0)) or flt(self.qty)
 		base_uom = frappe.db.get_value("Item", self.production_item, "stock_uom") or "L"
 		se.append(
@@ -254,6 +256,7 @@ class CustomWorkOrder(WorkOrder):
 				"t_warehouse": wip_wh,
 				"batch_no": _g(self, "pm_base_batch_no"),
 				"is_finished_item": 1,
+				"bom_no": self.bom_no,
 			},
 		)
 
@@ -282,7 +285,9 @@ class CustomWorkOrder(WorkOrder):
 		wip_wh = self.wip_warehouse
 		fg_wh = self.fg_warehouse
 
-		# 1. Base paint consumed from WIP (only what was used for packaging)
+		# 1. Base paint consumed from WIP (only what was used for packaging).
+		# bom_no on this row makes validate_for_manufacture=True so ERPNext
+		# correctly applies Manufacture-specific warehouse rules for all rows.
 		base_used = flt(_g(self, "pm_total_base_used", 0))
 		if base_used > 0 and self.production_item and wip_wh:
 			base_uom = frappe.db.get_value("Item", self.production_item, "stock_uom") or "L"
@@ -297,6 +302,7 @@ class CustomWorkOrder(WorkOrder):
 					"s_warehouse": wip_wh,
 					"batch_no": _g(self, "pm_base_batch_no"),
 					"is_finished_item": 0,
+					"bom_no": self.bom_no,
 				},
 			)
 
