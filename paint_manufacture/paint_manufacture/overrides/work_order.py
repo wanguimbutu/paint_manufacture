@@ -120,7 +120,7 @@ class CustomWorkOrder(WorkOrder):
 		self.db_set("pm_remaining_base_qty", _g(self, "pm_remaining_base_qty", 0))
 
 		if _g(self, "pm_quality_readings"):
-			qi_name = self._pm_make_quality_inspection()
+			qi_name = self._pm_make_quality_inspection(se_name)
 			self.db_set("pm_quality_inspection", qi_name)
 
 		self.produced_qty = flt(self.qty)
@@ -399,14 +399,14 @@ class CustomWorkOrder(WorkOrder):
 		se.submit()
 		return se.name
 
-	def _pm_make_quality_inspection(self):
+	def _pm_make_quality_inspection(self, paint_se_name=None):
 		readings = _g(self, "pm_quality_readings") or []
 		any_rejected = any(_g(r, "status") == "Rejected" for r in readings)
 
 		qi = frappe.new_doc("Quality Inspection")
 		qi.inspection_type = "In Process"
-		qi.reference_type = "Work Order"
-		qi.reference_name = self.name
+		qi.reference_type = "Stock Entry"
+		qi.reference_name = paint_se_name or _g(self, "pm_paint_stock_entry")
 		qi.item_code = self.production_item
 		qi.bom_no = self.bom_no
 		qi.company = self.company
