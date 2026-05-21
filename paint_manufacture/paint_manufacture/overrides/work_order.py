@@ -142,7 +142,7 @@ class CustomWorkOrder(WorkOrder):
 			frappe.throw(_("Please select a Quality Inspection Template first."))
 		template_doc = frappe.get_doc("Quality Inspection Template", tmpl)
 		self.set("pm_quality_readings", [])
-		for row in template_doc.readings:
+		for row in template_doc.item_quality_inspection_parameter:
 			self.append(
 				"pm_quality_readings",
 				{
