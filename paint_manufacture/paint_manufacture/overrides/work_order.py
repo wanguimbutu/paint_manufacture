@@ -400,6 +400,9 @@ class CustomWorkOrder(WorkOrder):
 		return se.name
 
 	def _pm_make_quality_inspection(self):
+		readings = _g(self, "pm_quality_readings") or []
+		any_rejected = any(_g(r, "status") == "Rejected" for r in readings)
+
 		qi = frappe.new_doc("Quality Inspection")
 		qi.inspection_type = "In Process"
 		qi.reference_type = "Work Order"
@@ -409,8 +412,11 @@ class CustomWorkOrder(WorkOrder):
 		qi.company = self.company
 		qi.report_date = nowdate()
 		qi.quality_inspection_template = _g(self, "pm_quality_inspection_template")
+		qi.inspected_by = frappe.session.user
+		qi.sample_size = 1
+		qi.status = "Rejected" if any_rejected else "Accepted"
 
-		for row in (_g(self, "pm_quality_readings") or []):
+		for row in readings:
 			qi.append(
 				"readings",
 				{
