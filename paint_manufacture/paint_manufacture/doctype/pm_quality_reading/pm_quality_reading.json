@@ -17,6 +17,7 @@
  ],
  "fields": [
   {
+   "allow_on_submit": 1,
    "fieldname": "parameter",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -53,6 +54,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "bold": 1,
    "fieldname": "reading_value",
    "fieldtype": "Data",
@@ -60,6 +62,7 @@
    "label": "Reading Value"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -67,6 +70,7 @@
    "options": "\nAccepted\nRejected"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "remarks",
    "fieldtype": "Data",
    "label": "Remarks"
