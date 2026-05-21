@@ -412,7 +412,10 @@ class CustomWorkOrder(WorkOrder):
 		qi.company = self.company
 		qi.report_date = nowdate()
 		qi.quality_inspection_template = _g(self, "pm_quality_inspection_template")
-		qi.inspected_by = frappe.session.user
+		user = frappe.session.user
+		if not user or user in ("user", "Guest") or not frappe.db.exists("User", user):
+			user = frappe.db.get_value("User", {"enabled": 1, "user_type": "System User"}, "name") or "Administrator"
+		qi.inspected_by = user
 		qi.sample_size = 1
 		qi.status = "Rejected" if any_rejected else "Accepted"
 
