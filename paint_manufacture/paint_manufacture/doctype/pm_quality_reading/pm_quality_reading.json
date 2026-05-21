@@ -25,7 +25,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "parameter.parameter_name",
+   "fetch_from": "parameter.parameter",
    "fieldname": "parameter_name",
    "fieldtype": "Data",
    "in_list_view": 1,
