@@ -5,7 +5,7 @@
   "dt": "Work Order",
   "fieldname": "pm_is_paint_order",
   "fieldtype": "Check",
-  "insert_after": "amended_from",
+  "insert_after": "sales_order",
   "label": "This is a Paint Order",
   "description": "Enable Paint-specific production fields",
   "allow_on_submit": 1
